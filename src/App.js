@@ -1,38 +1,53 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 import './normalize.css';
 import './skeleton.css';
 import './App.css';
 
-let json = [
- {
-   "Position": 1,
-   "TeamName": "Funny Guys",
-   "Pub": " The Barge",
-   "Points": 300
- },
- {
-   "Position": 2,
-   "TeamName": "Smarties",
-   "Pub": " The Duck",
-   "Points": 209
- },
- {
-   "Position": 3,
-   "TeamName": "Banjos",
-   "Pub": " The Rose",
-   "Points": 201
- },
- {
-   "Position": 4,
-   "TeamName": "Boffins",
-   "Pub": " The Crown",
-   "Points": 100
- }
-];
+//var csv is the CSV file with headers
+const csvJSON = (csv) => {
+
+  let lines=csv.split("\n");
+
+  let result = [];
+
+  let headers = lines[0].split(',');
+
+  lines.shift();
+
+  lines.forEach(function(line){
+    let obj = {}; 
+    let currentline = line.split(',');
+
+    headers.forEach(function(header, j){
+      obj[header] = currentline[j];
+    })
+    result.push(obj);
+  });
+
+  return result; 
+}
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  componentWillMount() {
+    axios.get(this.props.url)
+    .then(response => this.setState({data: response.data}))
+  }
+
   render() {
+    if(!this.state.data) {
+      return <div>loading</div>
+    }
+
+    var json = csvJSON(this.state.data);
+
     return (
+
       <div className="App">
         <table className="u-full-width">
           <thead>

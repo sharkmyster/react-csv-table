@@ -4,6 +4,6 @@ import App from './App';
 import './index.css';
 
 ReactDOM.render(
-  <App />,
+  <App url='/sample.csv'/>,
   document.getElementById('root')
 );
