@@ -35,9 +35,11 @@ const TableRow = ({rowData}) => {
 }
 
 const Table = ({data, className, limit}) => {
+
   let rows = data.slice(0, limit);
   let headers = Object.keys(rows[0]);
-  
+
+
   return (
     <table className={className}>
       <thead>
@@ -64,24 +66,38 @@ Table.propTypes = {
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      filter: '',
+      data: []
+    };
   }
 
   componentWillMount() {
+    console.log("running");
     axios.get(this.props.url)
-    .then(response => this.setState({data: response.data}))
+    .then(response => {
+      this.setState({data: csvJSON(response.data)})
+    })
+  }
+
+  filterRows(e) {
+    this.setState({filter: e.target.value})
   }
 
   render() {
-    if(!this.state.data) {
-      return <div>loading</div>
-    }
+    var tableData = this.state.data.filter(el => {
+      return el["Company Name"].toLowerCase().includes(this.state.filter.toLowerCase())
+    });
 
-    var tableData = csvJSON(this.state.data);
+    if(!tableData.length) {
+      return <h1>No data</h1>
+    }
 
     return (
 
       <div className="App">
+        <h1>Table</h1>
+        <input type="text" onKeyUp={this.filterRows.bind(this)} />
         <Table data={tableData} className="u-full-width" limit="10"/>
       </div>
     );
