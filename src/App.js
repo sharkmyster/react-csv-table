@@ -7,18 +7,15 @@ import './App.css';
 //var csv is the CSV file with headers
 const csvJSON = (csv) => {
   let lines=csv.split("\n");
-
   let result = [];
-
   let headers = lines[0].split(',');
-
   lines.shift();
 
-  lines.forEach(function(line){
+  lines.forEach((line) => {
     let obj = {}; 
     let currentline = line.split(',');
 
-    headers.forEach(function(header, j){
+    headers.forEach((header, j) => {
       obj[header] = currentline[j];
     })
     result.push(obj);
@@ -27,23 +24,31 @@ const csvJSON = (csv) => {
   return result; 
 }
 
-const Table = ({data, className}) => {
+const TableRow = ({rowData}) => {
+  let headers = Object.keys(rowData);
+
+  return (
+    <tr>
+      {headers.map((header, i) => <td key={i}>{rowData[header]} </td>)}
+    </tr>
+  )
+}
+
+const Table = ({data, className, limit}) => {
+  let rows = data.slice(0, limit);
+  let headers = Object.keys(rows[0]);
+  
   return (
     <table className={className}>
       <thead>
         <tr>
-        {Object.keys(data[0]).map(key => <th key={key}>{key}</th>)}
+        {headers.map(key => <th key={key}>{key}</th>)}
         </tr>
       </thead>
       <tbody>
-      {data.map((el,i) => {
+      {rows.map((el,i) => {
         return (
-          <tr key={i}>
-            <td>{el.Index} </td>
-            <td>{el.Company} </td>
-            <td>{el.Address} </td>
-            <td>{el.Value} </td>
-          </tr>
+          <TableRow key={i} headers={headers} rowData={el} />
         )
       })}
       </tbody>
@@ -77,7 +82,7 @@ class App extends Component {
     return (
 
       <div className="App">
-        <Table data={tableData} className="u-full-width"/>
+        <Table data={tableData} className="u-full-width" limit="10"/>
       </div>
     );
   }
