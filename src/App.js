@@ -59,10 +59,10 @@ class App extends Component {
           {json.map((el,i) => {
             return (
               <tr key={i}>
-                <td>{el.Position} </td>
-                <td>{el.TeamName} </td>
-                <td>{el.Pub} </td>
-                <td>{el.Points} </td>
+                <td>{el.Index} </td>
+                <td>{el.Company} </td>
+                <td>{el.Address} </td>
+                <td>{el.Value} </td>
               </tr>
             )
           })}
