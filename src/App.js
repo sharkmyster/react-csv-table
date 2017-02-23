@@ -6,7 +6,6 @@ import './App.css';
 
 //var csv is the CSV file with headers
 const csvJSON = (csv) => {
-
   let lines=csv.split("\n");
 
   let result = [];
@@ -28,6 +27,35 @@ const csvJSON = (csv) => {
   return result; 
 }
 
+const Table = ({data, className}) => {
+  return (
+    <table className={className}>
+      <thead>
+        <tr>
+        {Object.keys(data[0]).map(key => <th key={key}>{key}</th>)}
+        </tr>
+      </thead>
+      <tbody>
+      {data.map((el,i) => {
+        return (
+          <tr key={i}>
+            <td>{el.Index} </td>
+            <td>{el.Company} </td>
+            <td>{el.Address} </td>
+            <td>{el.Value} </td>
+          </tr>
+        )
+      })}
+      </tbody>
+    </table> 
+  )
+}
+
+Table.propTypes = {
+  data: React.PropTypes.array
+};
+
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -44,30 +72,12 @@ class App extends Component {
       return <div>loading</div>
     }
 
-    var json = csvJSON(this.state.data);
+    var tableData = csvJSON(this.state.data);
 
     return (
 
       <div className="App">
-        <table className="u-full-width">
-          <thead>
-            <tr>
-            {Object.keys(json[0]).map(key => <th key={key}>{key}</th>)}
-            </tr>
-          </thead>
-          <tbody>
-          {json.map((el,i) => {
-            return (
-              <tr key={i}>
-                <td>{el.Index} </td>
-                <td>{el.Company} </td>
-                <td>{el.Address} </td>
-                <td>{el.Value} </td>
-              </tr>
-            )
-          })}
-          </tbody>
-        </table> 
+        <Table data={tableData} className="u-full-width"/>
       </div>
     );
   }
